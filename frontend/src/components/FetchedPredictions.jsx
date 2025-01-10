@@ -45,7 +45,7 @@ const FetchedPredictions = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/prediction", {
+      const response = await fetch(`${process.env.REACT_APP_BY_THE_DEGREE_BACKEND_BASEURL}/prediction`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
