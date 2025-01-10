@@ -30,7 +30,7 @@ const Predictor = () => {
 
   const storeUserData = async (userData) => {
     try {
-      await axios.post(`${BY_THE_DEGREE_BACKEND_BASEURL}/users`, userData, {
+      await axios.post(`${process.env.BY_THE_DEGREE_BACKEND_BASEURL}/users`, userData, {
         headers: {
           "Content-Type": "application/json",
         },
