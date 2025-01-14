@@ -135,8 +135,8 @@ const Predictor = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f5f8f3] flex raleway-font items-center justify-center px-2">
-      <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-10">
+    <div className="h-4/6 bg-[#f5f8f3] flex raleway-font items-center justify-center px-2 py-4">
+      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-10 mr-6">
         <div className="left-section raleway-font flex flex-col justify-center space-y-4">
           <h1 className="text-4xl md:text-5xl text-[#4a4a4a] leading-snug">
             Discover Your <span className="text-[#965a3e] italic">Celestial Journey</span>
