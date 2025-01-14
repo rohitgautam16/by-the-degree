@@ -43,22 +43,22 @@ const Predictor = () => {
 
   const calculateBirthInfo = async () => {
     const { name, email, date, time, place } = formData;
-  
+
     if (!name || !email || !date || !time || !place) {
       alert("Please fill out all the fields.");
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
       const [lat, lon] = place.split(",");
       const latitude = parseFloat(lat);
       const longitude = parseFloat(lon);
-  
+
       const [year, month, day] = date.split("-");
       const [hour, minute] = time.split(":");
-  
+
       const requestData = {
         year: parseInt(year),
         month: parseInt(month),
@@ -74,7 +74,7 @@ const Predictor = () => {
           ayanamsha: "lahiri",
         },
       };
-  
+
       const response = await axios.post(
         "https://json.freeastrologyapi.com/planets",
         requestData,
@@ -85,18 +85,17 @@ const Predictor = () => {
           },
         }
       );
-  
+
       console.log("API Response:", response.data);
-  
+
       const outputData = response.data?.output?.[0];
       if (!outputData) {
         alert("Invalid API response. Please try again.");
         return;
       }
-  
-     
+
       const degreeData = Object.values(outputData)
-        .filter((item) => typeof item === "object" && item.name) 
+        .filter((item) => typeof item === "object" && item.name)
         .map((planet) => ({
           name: planet.name,
           normDegree: planet.normDegree,
@@ -104,15 +103,15 @@ const Predictor = () => {
           isRetro: planet.isRetro === "true",
           currentSign: planet.current_sign,
         }));
-  
+
       if (!degreeData.length) {
         alert("No planetary degree data available. Please try again.");
         return;
       }
-  
+
       const userData = { name, email, date, time, place };
       await storeUserData(userData);
-  
+
       navigate("/fetchedPredictions", { state: { degreeData } });
     } catch (error) {
       console.error("Error fetching planetary data:", error.response?.data || error.message);
@@ -121,8 +120,6 @@ const Predictor = () => {
       setLoading(false);
     }
   };
-  
-  
 
   useEffect(() => {
     gsap.fromTo(
@@ -138,22 +135,22 @@ const Predictor = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f5f8f3] flex raleway-font items-center justify-center px-6">
-      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="left-section raleway-font flex flex-col justify-center space-y-6">
-          <h1 className="text-6xl text-[#4a4a4a] leading-snug">
+    <div className="min-h-screen bg-[#f5f8f3] flex raleway-font items-center justify-center px-2">
+      <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="left-section raleway-font flex flex-col justify-center space-y-4">
+          <h1 className="text-4xl md:text-5xl text-[#4a4a4a] leading-snug">
             Discover Your <span className="text-[#965a3e] italic">Celestial Journey</span>
           </h1>
-          <p className="text-lg text-gray-600 raleway-font leading-relaxed">
+          <p className="text-base md:text-lg text-gray-600 raleway-font leading-relaxed">
             Unearth the secrets of the stars and uncover how celestial bodies influence your life. Try our cutting-edge
             predictor to gain personalized astrological insights tailored just for you.
           </p>
         </div>
-        <div className="right-section bg-white shadow-lg raleway-font rounded-2xl m-10 p-8">
-          <h2 className="text-3xl font-semibold text-center text-[#4a4a4a] mb-8">Fill Your Details</h2>
-          <div className="space-y-6">
+        <div className="right-section bg-white shadow-lg raleway-font rounded-lg py-4 px-6">
+          <h2 className="text-2xl font-semibold text-center text-[#4a4a4a] mb-4">Fill Your Details</h2>
+          <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-lg font-medium text-gray-700">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                 Name
               </label>
               <input
@@ -162,11 +159,11 @@ const Predictor = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:ring-2 focus:ring-[#965a3e] focus:outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:ring-2 focus:ring-[#965a3e] focus:outline-none"
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-lg font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email
               </label>
               <input
@@ -175,11 +172,11 @@ const Predictor = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:ring-2 focus:ring-[#965a3e] focus:outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:ring-2 focus:ring-[#965a3e] focus:outline-none"
               />
             </div>
             <div>
-              <label htmlFor="date" className="block text-lg font-medium text-gray-700">
+              <label htmlFor="date" className="block text-sm font-medium text-gray-700">
                 Date of Birth
               </label>
               <input
@@ -188,11 +185,11 @@ const Predictor = () => {
                 name="date"
                 value={formData.date}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:ring-2 focus:ring-[#965a3e] focus:outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:ring-2 focus:ring-[#965a3e] focus:outline-none"
               />
             </div>
             <div>
-              <label htmlFor="time" className="block text-lg font-medium text-gray-700">
+              <label htmlFor="time" className="block text-sm font-medium text-gray-700">
                 Time of Birth
               </label>
               <input
@@ -201,11 +198,11 @@ const Predictor = () => {
                 name="time"
                 value={formData.time}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 focus:ring-2 focus:ring-[#965a3e] focus:outline-none"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 focus:ring-2 focus:ring-[#965a3e] focus:outline-none"
               />
             </div>
             <div>
-              <label htmlFor="place" className="block text-lg font-medium text-gray-700">
+              <label htmlFor="place" className="block text-sm font-medium text-gray-700">
                 Place of Birth
               </label>
               <Select
