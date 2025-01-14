@@ -9,7 +9,7 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const menuItemsRef = useRef([]);
-  const isFirstRender = useRef(true); // Track the first render
+  const isFirstRender = useRef(true); 
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -17,21 +17,21 @@ const Header = () => {
 
   useEffect(() => {
     if (isFirstRender.current) {
-      isFirstRender.current = false; // Mark first render as completed
+      isFirstRender.current = false; 
       return;
     }
 
     if (menuOpen) {
       const timeline = gsap.timeline();
 
-      // Animation for the fullscreen menu
+  
       timeline.fromTo(
         menuRef.current,
-        { x: "-100%" }, // Menu hidden initially
+        { x: "-100%" }, 
         { x: "0%", duration: 0.6, ease: "power1.out" }
       );
 
-      // Animation for the menu items
+      
       timeline.fromTo(
         menuItemsRef.current,
         { x: "-100%", opacity: 0 },
@@ -44,7 +44,7 @@ const Header = () => {
         ""
       );
     } else {
-      // Close animation for the menu
+      
       gsap.to(menuRef.current, { x: "-100%", duration: 0.6, ease: "power1.in" });
     }
   }, [menuOpen]);
@@ -52,7 +52,7 @@ const Header = () => {
   return (
     <header className="bg-[#f5f8f3] text-[#46574a] raleway-font shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Menu toggle button */}
+       
         <div
           className="text-2xl cursor-pointer hover:text-gray-500 transition duration-300"
           onClick={toggleMenu}
@@ -60,12 +60,12 @@ const Header = () => {
           <HiMenuAlt4 />
         </div>
 
-        {/* Logo */}
+       
         <Link to="/" className="pl-24 text-3xl font-normal text-[#46574a]">
           BY THE DEGREE
         </Link>
 
-        {/* Social icons */}
+       
         <div className="flex items-center space-x-6">
           <FaInstagram className="cursor-pointer hover:text-gray-500" size={24} />
           <FiX className="cursor-pointer hover:text-gray-500" size={24} />
@@ -75,12 +75,12 @@ const Header = () => {
 
       <hr className="h-px bg-gray-500 mt-3" />
 
-      {/* Fullscreen menu */}
+      
       <div
         ref={menuRef}
         className={`fixed inset-0 bg-[#46574a] bg-opacity-95 z-50 flex flex-col items-center justify-center transform -translate-x-full`}
       >
-        {/* Close button */}
+        
         <button
           className="absolute top-6 right-6 text-2xl text-gray-300 hover:text-white transition duration-300"
           onClick={toggleMenu}
@@ -88,7 +88,7 @@ const Header = () => {
           <FiX />
         </button>
 
-        {/* Menu items */}
+        
         <div className="flex flex-col items-center space-y-8 text-white">
           {[
             { label: "Home", link: "/" },
