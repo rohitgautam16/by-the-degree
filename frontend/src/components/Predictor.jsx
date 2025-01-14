@@ -43,22 +43,22 @@ const Predictor = () => {
 
   const calculateBirthInfo = async () => {
     const { name, email, date, time, place } = formData;
-
+  
     if (!name || !email || !date || !time || !place) {
       alert("Please fill out all the fields.");
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
       const [lat, lon] = place.split(",");
       const latitude = parseFloat(lat);
       const longitude = parseFloat(lon);
-
+  
       const [year, month, day] = date.split("-");
       const [hour, minute] = time.split(":");
-
+  
       const requestData = {
         year: parseInt(year),
         month: parseInt(month),
@@ -69,14 +69,13 @@ const Predictor = () => {
         latitude: latitude,
         longitude: longitude,
         timezone: 5.5,
-        settings: {
-          observation_point: "topocentric",
-          ayanamsha: "lahiri",
-        },
+        observation_point: "topocentric", 
+        ayanamsha: "lahiri", 
+        language: "en", 
       };
-
+  
       const response = await axios.post(
-        "https://json.freeastrologyapi.com/planets",
+        "https://json.freeastrologyapi.com/planets/extended",
         requestData,
         {
           headers: {
@@ -85,33 +84,35 @@ const Predictor = () => {
           },
         }
       );
-
-      console.log("API Response:", response.data);
-
-      const outputData = response.data?.output?.[0];
+  
+      
+      const outputData = response.data?.output;
+  
       if (!outputData) {
         alert("Invalid API response. Please try again.");
         return;
       }
-
-      const degreeData = Object.values(outputData)
-        .filter((item) => typeof item === "object" && item.name)
-        .map((planet) => ({
-          name: planet.name,
-          normDegree: planet.normDegree,
-          fullDegree: planet.fullDegree,
-          isRetro: planet.isRetro === "true",
-          currentSign: planet.current_sign,
-        }));
-
+  
+      
+      const degreeData = Object.keys(outputData).map((planet) => {
+        const planetData = outputData[planet];
+        return {
+          name: planet,
+          normDegree: planetData.normDegree,
+          fullDegree: planetData.fullDegree,
+          currentSign: planetData.current_sign,
+          zodiacSignName: planetData.zodiac_sign_name, 
+        };
+      }).filter(item => item.normDegree && item.fullDegree && item.currentSign && item.zodiacSignName); 
+  
       if (!degreeData.length) {
         alert("No planetary degree data available. Please try again.");
         return;
       }
-
+  
       const userData = { name, email, date, time, place };
       await storeUserData(userData);
-
+  
       navigate("/fetchedPredictions", { state: { degreeData } });
     } catch (error) {
       console.error("Error fetching planetary data:", error.response?.data || error.message);
@@ -120,6 +121,9 @@ const Predictor = () => {
       setLoading(false);
     }
   };
+  
+  
+  
 
   useEffect(() => {
     gsap.fromTo(
@@ -216,7 +220,7 @@ const Predictor = () => {
               onClick={calculateBirthInfo}
               className={`w-full ${
                 loading
-                  ? "bg-gray-400 cursor-not-allowed"
+                  ? "bg-[#965a3e] text-white rounded-lg py-3 text-lg hover:bg-[#7d4a3e] transition duration-300 cursor-not-allowed"
                   : "bg-[#965a3e] text-white rounded-lg py-3 text-lg hover:bg-[#7d4a3e] transition duration-300"
               }`}
               disabled={loading}

@@ -36,11 +36,11 @@ const FetchedPredictions = () => {
   const { degreeData } = location.state || { degreeData: [] };
   const [predictions, setPredictions] = useState([]);
 
-  const fetchPrediction = async (zodiac, degree) => {
-    console.log("Fetching prediction for:", { zodiac, degree }); 
+  const fetchPrediction = async (zodiacSignName, degree) => {
+    console.log("Fetching prediction for:", { zodiacSignName, degree });
 
-    if (!zodiac || degree === undefined || degree === null) {
-      console.error("Missing zodiac or degree:", { zodiac, degree });
+    if (!zodiacSignName || degree === undefined || degree === null) {
+      console.error("Missing zodiac or degree:", { zodiacSignName, degree });
       return "Invalid input: Zodiac and degree are required.";
     }
 
@@ -50,7 +50,7 @@ const FetchedPredictions = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ zodiac, degree }),
+        body: JSON.stringify({ zodiac: zodiacSignName, degree }),
       });
 
       if (!response.ok) {
@@ -74,17 +74,19 @@ const FetchedPredictions = () => {
       const fetchPredictions = async () => {
         const predictionsWithNormDegrees = await Promise.all(
           degreeData.map(async (body) => {
-            const normDegree = Math.floor(parseFloat(body.normDegree)); 
-            const zodiac = body.name; 
-            console.log("Processing body:", { zodiac, normDegree });
-
-            const prediction = await fetchPrediction(zodiac, normDegree); 
-            return { ...body, normDegree, prediction };
+            
+            const normDegree = Math.floor(parseFloat(body.normDegree));
+            const zodiacSignName = body.zodiacSignName; 
+      
+           
+            const prediction = await fetchPrediction(zodiacSignName, normDegree);
+            return { ...body, normDegree, prediction, zodiacSignName };
           })
         );
-
+      
         setPredictions(predictionsWithNormDegrees);
       };
+      
 
       fetchPredictions();
     } else {
@@ -111,6 +113,7 @@ const FetchedPredictions = () => {
                 <tr className="bg-[#4a4a4a] raleway-font text-white">
                   <th className="py-3 px-4 border border-black text-left">Sign</th>
                   <th className="py-3 px-4 border border-black text-left">Degree</th>
+                  <th className="py-3 px-4 border border-black text-left">Zodiac</th>
                   <th className="py-3 px-4 border border-black text-left">Prediction</th>
                 </tr>
               </thead>
@@ -126,6 +129,9 @@ const FetchedPredictions = () => {
                       {body.name}
                     </td>
                     <td className="py-2 px-4 border border-black">{body.normDegree}</td>
+                    <td className="py-2 px-8 border border-black">
+                      {body.zodiacSignName} 
+                    </td>
                     <td className="py-2 px-4 border border-black break-words">
                       {body.prediction || "No prediction available"}
                     </td>

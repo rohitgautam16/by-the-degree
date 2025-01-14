@@ -9,20 +9,26 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const menuItemsRef = useRef([]);
+  const isFirstRender = useRef(true); // Track the first render
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen((prev) => !prev);
   };
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false; // Mark first render as completed
+      return;
+    }
+
     if (menuOpen) {
       const timeline = gsap.timeline();
 
       // Animation for the fullscreen menu
       timeline.fromTo(
         menuRef.current,
-        { x: "-100%" },
-        { x: "0%", duration: 0.6, ease: "power1.out" } // Smooth fade for fullscreen menu
+        { x: "-100%" }, // Menu hidden initially
+        { x: "0%", duration: 0.6, ease: "power1.out" }
       );
 
       // Animation for the menu items
@@ -32,10 +38,10 @@ const Header = () => {
         {
           x: "0%",
           opacity: 1,
-          duration: 0.8,
-          ease: "power1.out"// Stagger for individual menu items
+          duration: 0.6,
+          ease: "power1.out",
         },
-        "-=0.4" // Overlap with menu animation
+        ""
       );
     } else {
       // Close animation for the menu
@@ -72,7 +78,7 @@ const Header = () => {
       {/* Fullscreen menu */}
       <div
         ref={menuRef}
-        className={`fixed inset-0 bg-[#46574a] bg-opacity-95 z-50 flex flex-col items-center justify-center`}
+        className={`fixed inset-0 bg-[#46574a] bg-opacity-95 z-50 flex flex-col items-center justify-center transform -translate-x-full`}
       >
         {/* Close button */}
         <button
